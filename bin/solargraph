@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+: ${EXTRA_ARGS=""}
+: ${IMAGE:=solargraph:local}
+
+exec /usr/local/bin/docker \
+     run --rm=true \
+     ${EXTRA_ARGS} \
+     -p 7658:7658 \
+     -v ${HOME}:${HOME} \
+     ${IMAGE} \
+     socket --host 0.0.0.0
