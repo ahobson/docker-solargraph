@@ -5,10 +5,24 @@ set -euxo pipefail
 : ${EXTRA_ARGS=""}
 : ${IMAGE:=solargraph:local}
 
+if [ -z "${1+x}" ]; then
+  ARGS="socket --host 0.0.0.0"
+  EXTRA_ARGS="${EXTRA_ARGS} -p 7658:7658"
+else
+  ARGS="$@"
+  if [ "${1}" == "socket" ]; then
+    EXTRA_ARGS="${EXTRA_ARGS} -p 7658:7658"
+  else
+    EXTRA_ARGS="-i"
+  fi
+fi
+
+
 exec /usr/local/bin/docker \
      run --rm=true \
+     -e MALLOC_ARENA_MAX=1 \
      ${EXTRA_ARGS} \
-     -p 7658:7658 \
-     -v ${HOME}:${HOME} \
+     -v ${HOME}:${HOME}:cached \
+     -w $PWD \
      ${IMAGE} \
-     socket --host 0.0.0.0
+     $ARGS
