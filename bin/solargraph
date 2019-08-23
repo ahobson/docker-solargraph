@@ -17,12 +17,10 @@ else
   fi
 fi
 
-
 exec /usr/local/bin/docker \
-     run --rm=true \
-     -e MALLOC_ARENA_MAX=1 \
+     exec \
      ${EXTRA_ARGS} \
-     -v ${HOME}:${HOME}:cached \
      -w $PWD \
-     ${IMAGE} \
-     $ARGS
+     solargraph \
+     solargraph $ARGS
+
